@@ -1,0 +1,9 @@
+package simple-array
+
+version = "0.0.1"
+
+opts = "-p contrib"
+sourcedir = src
+
+modules = SimpleArray
+tests = SimpleArray.test
