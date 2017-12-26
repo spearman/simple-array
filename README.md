@@ -1,6 +1,6 @@
 # `SimpleArray`
 
-> Simple wrapper around `Data.IOArray`.
+> Simple wrapper around `Data.IOArray` mutable arrays.
 
 
 ## Installation
