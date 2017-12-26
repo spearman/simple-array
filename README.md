@@ -2,19 +2,15 @@
 
 > Simple wrapper around `Data.IOArray` mutable arrays.
 
-
 ## Installation
 
     idris --install package.ipkg
 
 Make the package available to Idris with the flag `-p simple-array`.
 
-Include the provided module with `import SimpleArray`.
-
-
 ## Usage
 
-```
+```idris
 import SimpleArray
 
 main : IO ()
