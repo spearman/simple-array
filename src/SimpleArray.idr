@@ -40,7 +40,7 @@ put : SimpleArray elem -> Int -> elem -> IO (Maybe ())
 put array@(MkSimpleArray inner size) i e =
   pure $ if size <= i then Nothing else Just !(unsafeWriteArray inner i e)
 
-||| map a function over the given array, creating a new array holding the
+||| Map a function over the given array, creating a new array holding the
 ||| results.
 export
 map : Monoid b => (a -> b) -> SimpleArray a -> IO (SimpleArray b)
@@ -52,7 +52,19 @@ map f array@(MkSimpleArray from size) = do
   )
   pure $ MkSimpleArray to size
 
-||| map a function over the given array, writing the result values directly
+||| Map an IO function over the given array, creating a new array holding the
+||| results.
+export
+mapIO : Monoid b => (a -> IO b) -> SimpleArray a -> IO (SimpleArray b)
+mapIO f array@(MkSimpleArray from size) = do
+  to <- newArray size neutral
+  for (take (toNat size) $ iterate (+1) 0) (\i => do
+    e <- unsafeReadArray from i
+    unsafeWriteArray to i $ !(f e)
+  )
+  pure $ MkSimpleArray to size
+
+||| Map a function over the given array, writing the result values directly
 ||| into the array.
 export
 mapInplace : (elem -> elem) -> SimpleArray elem -> IO (SimpleArray elem)
@@ -97,7 +109,7 @@ show (MkSimpleArray inner size) = do
 export
 showPretty : Show elem => SimpleArray elem -> IO String
 showPretty (MkSimpleArray inner size) = do
-  elems <- for (take (toNat size) $ iterate (+1) 0) (\i => do
+  elems <- for (take (toNat size) $ iterate (+1) 0) (\i =>
     pure $ show !(unsafeReadArray inner i)
       ++ if i < (size - 1) then ",\n  " else "\n"
   )
